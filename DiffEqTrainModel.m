@@ -7,7 +7,8 @@ global v0;          %% the OUTPUT
 global x0;          %% the OUTPUT
 global tspan;
 global t;
-
+global Totaltime;
+global distance;
 
 %% Loop
 
@@ -42,7 +43,7 @@ timev=0:    (Totaltime)/(length(v_val)-1):    Totaltime;     % in s
 timex=0:    (Totaltime)/(length(x_val)-1):    Totaltime;     % in s
 
 %optional
-distance = mean(v_val)*Totaltime;                      % in m
+distance = mean(v_val)*time;                      % in m
 
 %hold on;
 
