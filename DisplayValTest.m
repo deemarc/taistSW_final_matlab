@@ -9,8 +9,11 @@ global x0;
 global tspan;
 global t;
 global uval
+ip = '192.168.137.90';
+handles.NextStation.String = getDestination(ip,handles.TrainSelect.Value);
+%handles.RemainBlocks.String = num2str(getRemainBlocks(handles.TrainSelect.Value));
 
-%Tracking status 
+
 set(handles.Track1,'BackgroundColor','green');
 set(handles.Track2,'BackgroundColor','green');
 set(handles.Track3,'BackgroundColor','green');
@@ -65,8 +68,8 @@ if time <= length(level)
 %     figure(1),subplot(1,3,3),plot(x_val),title('Distance');
 %     hold on;
         
-    set(handles.RemainBlocks,'string',num2str(length(level) - time));
-    set(handles.NextStation,'string','Tokyo Station');
+%     set(handles.RemainBlocks,'string',num2str(length(level) - time));
+%     set(handles.NextStation,'string','Tokyo Station');
 
     if time == 36
         set(handles.TrafficLight1,'BackgroundColor','black');
