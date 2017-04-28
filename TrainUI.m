@@ -57,13 +57,13 @@ handles.output = hObject;
 
 %opening
 % Train Images
-trainimg1 = imread('Train1.png');
+trainimg1 = imread('loadbar.png');
 axes(handles.Train1Image); 
 imshow(trainimg1);
-trainimg2 = imread('Train2.png');
+trainimg2 = imread('loadbar.png');
 axes(handles.Train2Image); 
 imshow(trainimg2);
-trainimg3 = imread('Train2.png');
+trainimg3 = imread('loadbar.png');
 axes(handles.Train3Image); 
 imshow(trainimg3);
 trainimg4 = imread('TrafficLightImage.png');
@@ -306,11 +306,31 @@ function TrainSelect_Callback(hObject, eventdata, handles)
 %selection
 global StartStatus
 global TrainRoute
+
 if (handles.TrainSelect.Value == 2 || handles.TrainSelect.Value == 3) && StartStatus == 1
     msgbox(sprintf('You cannot change train at this time'),'ERROR','ERROR');
     handles.TrainSelect.Value = TrainRoute;
 else
     TrainRoute = handles.TrainSelect.Value;
+    if TrainRoute == 2
+        trainimg1 = imread('TrainNR1_icon.png');
+        trainimg2 = imread('TrainNR2_icon.png');
+        axes(handles.Train1Image); 
+        imshow(trainimg1);
+        axes(handles.Train2Image); 
+        imshow(trainimg2);
+        axes(handles.Train3Image); 
+        imshow(trainimg2);
+    elseif  TrainRoute == 3
+        trainimg1 = imread('TrainYM1_icon.png');
+        trainimg2 = imread('TrainYM2_icon.png');
+        axes(handles.Train1Image); 
+        imshow(trainimg1);
+        axes(handles.Train2Image); 
+        imshow(trainimg2);
+        axes(handles.Train3Image); 
+        imshow(trainimg2);
+    end
 end
 
 
@@ -348,11 +368,15 @@ if handles.TrainSelect.Value == 1
     
 %Nariata Line
 elseif handles.TrainSelect.Value == 2
-       
+        
     StartStatus = get(hObject,'Value');
     if StartStatus == 1
         disp('Narita Line');
-        UpdateValTest(handles);     %test update values        
+        %
+        TrainRoute = handles.TrainSelect.Value;
+        %handles2 = SimulationUI(TrainRoute);                 %Simulation GUI
+        UpdateValTest(handles);     %,handles2  - for test update values   
+        %
         set(handles.StartButton,'string',' Start','enable','on','BackgroundColor','green');
     else
         stop(t);
@@ -361,11 +385,15 @@ elseif handles.TrainSelect.Value == 2
     
 %Yamanote Line    
 elseif handles.TrainSelect.Value == 3
-       
+   
     StartStatus = get(hObject,'Value');
     if StartStatus == 1
         disp('Yamanote Line');
-        UpdateValTest(handles);
+        %
+        TrainRoute = handles.TrainSelect.Value;
+        %handles2 = SimulationUI(TrainRoute);                 %Simulation GUI
+        UpdateValTest(handles);    %,handles2 for test update values   
+        %
         set(handles.StartButton,'string',' Start','enable','on','BackgroundColor','green');
     else
         stop(t);
