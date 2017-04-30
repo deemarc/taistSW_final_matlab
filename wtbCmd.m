@@ -6,7 +6,8 @@ classdef wtbCmd
       comName = 'COM5', %put some initial value
       delay   = 0.2, %delay 100 ms each round
       delayCount = 5 %time out after 500 ms
-      compoTable = struct('id',0,'tmpId',0, 'idOk', '0','function',0,'value',0); % init with first idex as master 
+      compoTable = struct('id',0,'tmpId',0, 'idOk', 0,'function',0,'value',0); % init with first idex as master
+      compoAccessIdx = wtbTrainStruc;
       recvBuf, %raw byte recv from com port
       rxBuff = [], %processed wtbMsg from recvBuf
       txBuff = [], %message to be send out
@@ -66,30 +67,7 @@ classdef wtbCmd
             obj = filterWtb(obj);
             obj = txCrossCheck(obj,masterState);
         end
-%         function obj = scanNetwork(obj)
-%             scanMsg = wtbMsg.scanNetworkMessage;
-%             obj.txBuff{1} = wtbMsg.wtb2raw(scanMsg);
-%             obj = obj.wtbWrite();
-%             counter = 0;
-%             Condition = true;
-%             while Condition
-%                % do stuff
-%                obj = obj.wtbRead();
-%                if isempty(obj.rxBuff)
-%                    counter =  counter + 1;
-%                    pause(obj.delay); %pause for 10 ms
-%                    display('time out count up');
-%                else
-%                    counter = 0;
-%                    obj = obj.assignId();
-%                end
-%                
-%                if ( counter == obj.delayCount) % no msg for 50 ms, t
-%                  Condition = false; 
-%                end
-%   
-%             end
-%         end
+
         function obj = assignId(obj)
         % take new message in check wether it is message reply from network scan or set id
         % - reply from scan: check if it is new id or not set Id in compoTables
@@ -102,44 +80,59 @@ classdef wtbCmd
                
             end
         end
-
-%         function obj = read(obj,type,dest)
-%             %assign commom val
-%             curWtbMsg = wtbMsg.emptyWtbFram();
-%             curWtbMsg.ctrl =  0;
-%             curWtbMsg.data(2) = 0;
-%             curWtbMsg.dest = dest;
-%             switch(type)             
-%                 case wtbEnum.cmdTypeFunc
-%                     curWtbMsg.data(1) = 2;
-%                 case wtbEnum.cmdTypeVal
-%                     curWtbMsg.data(1) = 3;
-%             end
-%             rawByteMsg = wtbMsg.wtb2raw(curWtbMsg);
-%             obj.send(rawByteMsg);
-%         end
         
+        function obj = initCompoAccessIdx(obj)
+            tmp = wtbTrainStruc;
+            j = 1;
+            for i=2:length(obj.compoTable)
+                curFuncVal = obj.compoTable(i).function;
+                %traction use fist byte
+                if curFuncVal <= hex2dec('FF')
+                    if(curFuncVal == 1)
+                        tmp.trac.power = i;
+                    elseif(curFuncVal == 2)
+                        tmp.trac.break = i;
+                    elseif(curFuncVal == 3)
+                        tmp.trac.status = i;
+                    elseif(curFuncVal == 4)
+                        tmp.trac.alarm = i;
+                    else
+                        warning('got id with unknown function value at index:')
+                        disp(i)
+                    end
+                else
+                    if(curFuncVal == hex2dec('0100'))
+                        if(tmp.psg(j).light > 0)
+                            j = j+1;
+                        end
+                        tmp.psg(j).light   = i;
+                    elseif(curFuncVal == hex2dec('0200'))
+                        if(tmp.psg(j).light > 0)
+                            j = j+1;
+                        end
+                        tmp.psg(j).airCon = i;
+                    elseif(curFuncVal == hex2dec('0300'))
+                        if(tmp.psg(j).light > 0)
+                            j = j+1;
+                        end
+                        tmp.psg(j).door = i;
+                    elseif(curFuncVal == hex2dec('0400'))
+                        if(tmp.psg(j).light > 0)
+                            j = j+1;
+                        end
+                        tmp.psg(j).alarm = i;
+                    else
+                        warning('got id with unknown function value at index:')
+                        disp(i)
+                    end
+                end
+            
+            end
+            obj.compoAccessIdx = tmp; 
+        end
+
         %%%%%%%%%%%%% internal function %%%%%%%%%%%%%
-%         function obj = askFunc(obj)
-%             noFuncMsg = length(obj.compoTable);
-%             %assign commom val
-%             for i=2:noFuncMsg
-%                 dest = obj.compoTable(i).id;
-%                 obj.read(wtbEnum.cmdTypeFunc,dest);
-%             end
-%             while noFuncMsg>1
-%                 obj.recv();
-%                 haveFunc = length(obj.recvMsgArr);
-%                 for i=1:haveFunc
-%                     curMsg = wtbMsg(obj.recvMsgArr{i});
-%                     obj.compoTable(curMsg.src + 1).function = ...
-%                     curMsg.data(1) + 32*curMsg.data(2);
-%                 end
-%                 noFuncMsg = noFuncMsg - haveFunc;
-%             end
-%             
-%         end
-%         
+
         function obj = wtbUpdate(obj, masterState)
             for i=1:length(obj.rxBuff)
                 curWtbMsg = wtbMsg.raw2wtb(obj.rxBuff{i});
@@ -171,10 +164,10 @@ classdef wtbCmd
 
                     case wtbEnum.read
                         obj.compoTable(curWtbMsg.src + 1).function = ...
-                        512*curWtbMsg.data(1) + curWtbMsg.data(2);
+                        256*curWtbMsg.data(1) + curWtbMsg.data(2);
                     case wtbEnum.driving
                         obj.compoTable(curWtbMsg.src + 1).value = ...
-                            512*curWtbMsg.data(1) + curWtbMsg.data(2);
+                        curWtbMsg.data(2);
                 end
                 
             end

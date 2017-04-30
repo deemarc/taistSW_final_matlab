@@ -65,26 +65,7 @@ classdef masterClass
                             obj.timeOutTimer = 0;
                         end
                     end
-%                     obj = obj.wtbHandle.read();
-%                     obj.wtbHandle = obj.wtbHandle.wtbUpdate(wtbEnum.driving);
-%                     obj.wtbHandle = obj.wtbHandle.wtbWrite();
-%                     if isempty(obj.wtbHandle.rxBuf)
-%                         obj.timeOutCounter = obj.timeOutCounter +1;
-%                     else
-%                         obj = obj.assignId(obj.wtbHandle.rxBuf);
-%                         obj.timeOutCounter = 0;
-%                     end
-%                     
-%                     
-%                     if obj.timeOutCounter = obj.timeOutCount
-%                         tableSize = length(obj.compoTable);
-%                         if (tableSize > 1) && (tableSize == obj.idOK)
-%                             obj.masterState = wtbEnum.read;
-%                             obj.timeOutCounter = 0;
-%                         else
-%                             error('compoTable is not initiate properly');
-%                         end
-%                     end
+
                 case wtbEnum.read
                     if isempty(obj.wtbHandle.rxBuff)
                        obj.timeOutTimer =  obj.timeOutTimer + 1;
@@ -97,13 +78,33 @@ classdef masterClass
                     %if all message has function the we move to next state
                     %else resend after timeout is reach
                     if isempty(obj.wtbHandle.chkBuff)
+                        obj.timeOutTimer = 0;
                         obj.masterState = wtbEnum.driving;
+                        obj.wtbHandle = obj.wtbHandle.initCompoAccessIdx();
+                        tracP = obj.wtbHandle.compoAccessIdx.trac.power;
+                        tracB = obj.wtbHandle.compoAccessIdx.trac.break;
+                        obj.readCompoVal([tracP tracB]);
                     elseif  obj.timeOutTimer >= obj.timeOutVal
                         obj = obj.resendNonreplyMsg();
-                        obj.timeOutTimer;
+                        obj.timeOutTimer = 0;
                     end
 
                 case wtbEnum.driving
+                    if isempty(obj.wtbHandle.rxBuff)
+                       display('receving nothing!!!');
+                    else
+                       obj.wtbHandle = obj.wtbHandle.wtbUpdate(obj.masterState);
+                    end
+                    tracP = obj.wtbHandle.compoAccessIdx.trac.power;
+                    tracB = obj.wtbHandle.compoAccessIdx.trac.break;
+                    disp('-----------------Power---------------------')
+                    disp(obj.wtbHandle.compoTable(tracP).value);
+                    disp('-----------------break---------------------')
+                    disp(obj.wtbHandle.compoTable(tracB).value);
+                    disp('-------------------------------------------')
+                    obj.readCompoVal([tracP tracB]);
+                    
+                    
                 otherwise
                         error('masterState has enter unknown state');
             end
@@ -119,6 +120,26 @@ classdef masterClass
             end
             obj.wtbHandle = obj.wtbHandle.wtbWrite();
         end
+        function obj = readCompoVal(obj, compoIdxArr)
+            curMsg = wtbMsg.emptyWtbFrame;
+            curMsg.data(1) = 3;
+            curMsg.data(2) = 0;
+            curMsg.ctrl = 0;
+            for i=1:length(compoIdxArr)
+                curIdx = compoIdxArr(i);
+                if curIdx > 0
+                    curMsg.dest = obj.wtbHandle.compoTable(curIdx).id;
+                    obj.wtbHandle.txBuff{end+1} = wtbMsg.wtb2raw(curMsg);
+                else
+                    warning('this component is not exist');
+                end
+            end
+             obj.wtbHandle = obj.wtbHandle.wtbWrite();
+        end
+%         function writeCompoVal()
+%             
+%         end
+        
         function obj = sendScanNetworkMsg(obj)
             scanMsg = wtbMsg.scanNetworkMessage;
             obj.wtbHandle.txBuff{1} = wtbMsg.wtb2raw(scanMsg);

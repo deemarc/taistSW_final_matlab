@@ -1,7 +1,8 @@
-function [ output_args ] = Untitled( input_args )
-%UNTITLED Summary of this function goes here
-%   Detailed explanation goes here
+clearCom;
+a = masterClass;
+a = a.init('COM4');
 
-
+while(1)
+   a = a.cycleTask();
+   pause(1);
 end
-
