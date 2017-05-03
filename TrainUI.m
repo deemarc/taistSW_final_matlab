@@ -71,16 +71,15 @@ axes(handles.TrafficLightImage);
 imshow(trainimg4);
 
 %defalt text at buttons
-set(handles.Lamp1Button,'string','Lamp1 OFF','enable','on','BackgroundColor',[0.94 0.94 0.94]);
-set(handles.Lamp2Button,'string','Lamp2 OFF','enable','on','BackgroundColor',[0.94 0.94 0.94]);
-set(handles.Lamp3Button,'string','Lamp3 OFF','enable','on','BackgroundColor',[0.94 0.94 0.94]);
-set(handles.Air1Button,'string','Air1 OFF','enable','on','BackgroundColor',[0.94 0.94 0.94]);
-set(handles.Air2Button,'string','Air2 OFF','enable','on','BackgroundColor',[0.94 0.94 0.94]);
-set(handles.Air3Button,'string','Air3 OFF','enable','on','BackgroundColor',[0.94 0.94 0.94]);
-set(handles.Door1Button,'string','Door1 OFF','enable','on','BackgroundColor',[0.94 0.94 0.94]);
-set(handles.PassengerDoorButton,'string','Door OFF','enable','on','BackgroundColor',[0.94 0.94 0.94]);
-% set(handles.PassengerDoorText,'string','Door2,3','enable','on','BackgroundColor',[0.94 0.94 0.94]);
-% set(handles.Door3Button,'string','Door2 OFF','enable','on','BackgroundColor',[0.94 0.94 0.94]);
+% set(handles.Lamp1Button,'string','Lamp OFF','enable','on','BackgroundColor',[0.94 0.94 0.94]);
+% set(handles.Lamp2Button,'string','OFF','enable','on','BackgroundColor',[0.94 0.94 0.94]);
+% set(handles.Lamp3Button,'string','OFF','enable','on','BackgroundColor',[0.94 0.94 0.94]);
+% set(handles.Air1Button,'string','Air OFF','enable','on','BackgroundColor',[0.94 0.94 0.94]);
+% set(handles.Air2Button,'string','OFF','enable','on','BackgroundColor',[0.94 0.94 0.94]);
+% set(handles.Air3Button,'string','OFF','enable','on','BackgroundColor',[0.94 0.94 0.94]);
+% set(handles.Door1Button,'string','Door OFF','enable','on','BackgroundColor',[0.94 0.94 0.94]);
+% set(handles.Door2Button,'string','OFF','enable','on','BackgroundColor',[0.94 0.94 0.94]);
+% set(handles.Door3Button,'string','OFF','enable','on','BackgroundColor',[0.94 0.94 0.94]);
 %defalt start toggle button
 set(handles.StartButton,'string',' Start','enable','on','BackgroundColor',[0.94 0.94 0.94]);
 %defalt alarm LED
@@ -95,10 +94,6 @@ set(handles.TrafficLight4,'BackgroundColor','red');
 
 global StartStatus;
 StartStatus = 0;
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        global ip;                        %%
-        ip = '192.168.137.90';            %%                          %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % select train
 dropdownTxt = {'Select Train','Narita Line','Yamanote Line'};
@@ -136,8 +131,12 @@ Lamp1Status = get(hObject,'Value');
 if StartStatus == 1
     if Lamp1Status == 1 
         set(handles.Lamp1Button,'string',' Lamp1 ON','enable','on','BackgroundColor','green');
+        set(handles.Lamp2Button,'string',' ON','enable','on','BackgroundColor','green');  %add
+        set(handles.Lamp3Button,'string',' ON','enable','on','BackgroundColor','green');  %add
     elseif Lamp1Status == 0 
-        set(handles.Lamp1Button,'string','Lamp1 OFF','enable','on','BackgroundColor',[0.94 0.94 0.94]);
+        set(handles.Lamp1Button,'string','Lamp OFF','enable','on','BackgroundColor',[0.94 0.94 0.94]);
+        set(handles.Lamp2Button,'string','OFF','enable','on','BackgroundColor',[0.86 0.86 0.86]);  %add
+        set(handles.Lamp3Button,'string','OFF','enable','on','BackgroundColor',[0.86 0.86 0.86]);  %add
     end
 else
     msgbox(sprintf('Please choose train and press start'),'ERROR','ERROR');
@@ -154,9 +153,13 @@ Air1Status = get(hObject,'Value');
 
 if StartStatus == 1
     if Air1Status == 1 
-        set(handles.Air1Button,'string',' Air1 ON','enable','on','BackgroundColor','green');
+        set(handles.Air1Button,'string',' Air ON','enable','on','BackgroundColor','green');
+        set(handles.Air2Button,'string',' ON','enable','on','BackgroundColor','green');  %add
+        set(handles.Air3Button,'string',' ON','enable','on','BackgroundColor','green'); %add
     elseif Air1Status == 0 
-        set(handles.Air1Button,'string','Air1 OFF','enable','on','BackgroundColor',[0.94 0.94 0.94]);
+        set(handles.Air1Button,'string','Air OFF','enable','on','BackgroundColor',[0.94 0.94 0.94]);
+         set(handles.Air2Button,'string','OFF','enable','on','BackgroundColor',[0.86 0.86 0.86]);
+          set(handles.Air3Button,'string','OFF','enable','on','BackgroundColor',[0.86 0.86 0.86]);
     end
 else
     msgbox(sprintf('Please choose train and press start'),'ERROR','ERROR');
@@ -173,111 +176,115 @@ Door1Status = get(hObject,'Value');
 
 if StartStatus == 1
     if Door1Status == 1 
-        set(handles.Door1Button,'string',' Door1 ON','enable','on','BackgroundColor','green');
+        set(handles.Door1Button,'string',' Door ON','enable','on','BackgroundColor','green');
+        set(handles.Door2Button,'string','ON','enable','on','BackgroundColor','green');
+        set(handles.Door3Button,'string','ON','enable','on','BackgroundColor','green');
     elseif Door1Status == 0 
-        set(handles.Door1Button,'string','Door1 OFF','enable','on','BackgroundColor',[0.94 0.94 0.94]);
+        set(handles.Door1Button,'string','Door OFF','enable','on','BackgroundColor',[0.94 0.94 0.94]);
+        set(handles.Door2Button,'string','OFF','enable','on','BackgroundColor',[0.86 0.86 0.86]);
+        set(handles.Door3Button,'string','OFF','enable','on','BackgroundColor',[0.86 0.86 0.86]);
     end
 else
     msgbox(sprintf('Please choose train and press start'),'ERROR','ERROR');
 end
 
-% --- Executes on button press in Lamp2Button.
-function Lamp2Button_Callback(hObject, eventdata, handles)
-% hObject    handle to Lamp2Button (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-global StartStatus;
-Lamp2Status = get(hObject,'Value'); 
+% % --- Executes on button press in Lamp2Button.
+% function Lamp2Button_Callback(hObject, eventdata, handles)
+% % hObject    handle to Lamp2Button (see GCBO)
+% % eventdata  reserved - to be defined in a future version of MATLAB
+% % handles    structure with handles and user data (see GUIDATA)
+% global StartStatus;
+% Lamp2Status = get(hObject,'Value'); 
+% 
+% if StartStatus == 1
+%     if Lamp2Status == 1 
+%         set(handles.Lamp2Button,'string',' Lamp2 ON','enable','on','BackgroundColor','green');
+%     elseif Lamp2Status == 0 
+%         set(handles.Lamp2Button,'string','Lamp2 OFF','enable','on','BackgroundColor',[0.94 0.94 0.94]);
+%     end
+% else
+%     msgbox(sprintf('Please choose train and press start'),'ERROR','ERROR');
+% end
+% 
+% % --- Executes on button press in Air2Button.
+% function Air2Button_Callback(hObject, eventdata, handles)
+% % hObject    handle to Air2Button (see GCBO)
+% % eventdata  reserved - to be defined in a future version of MATLAB
+% % handles    structure with handles and user data (see GUIDATA)
+% 
+% % Hint: get(hObject,'Value') returns toggle state of Air2Button
+% global StartStatus;
+% Air2Status = get(hObject,'Value'); 
+% 
+% if StartStatus == 1
+%     if Air2Status == 1 
+%         set(handles.Air2Button,'string',' Air2 ON','enable','on','BackgroundColor','green');
+%     elseif Air2Status == 0 
+%         set(handles.Air2Button,'string','Air2 OFF','enable','on','BackgroundColor',[0.94 0.94 0.94]);
+%     end
+% else
+%     msgbox(sprintf('Please choose train and press start'),'ERROR','ERROR');
+% end
+% 
+% % --- Executes on button press in PassengerDoorButton.
+% function PassengerDoorButton_Callback(hObject, eventdata, handles)
+% % hObject    handle to PassengerDoorButton (see GCBO)
+% % eventdata  reserved - to be defined in a future version of MATLAB
+% % handles    structure with handles and user data (see GUIDATA)
+% 
+% global StartStatus;
+% Door2Status = get(hObject,'Value'); 
+% 
+% if StartStatus == 1
+%     if Door2Status == 1 
+%         set(handles.PassengerDoorButton,'string','Door ON','enable','on','BackgroundColor','green');
+%         set(handles.PassengerDoorText,'string','Passenger','enable','on','BackgroundColor','green');
+%     elseif Door2Status == 0 
+%         set(handles.PassengerDoorButton,'string','Door OFF','enable','on','BackgroundColor',[0.94 0.94 0.94]);
+%         set(handles.PassengerDoorText,'string','Passenger','enable','on','BackgroundColor',[0.94 0.94 0.94]);
+%     end
+% else
+%     msgbox(sprintf('Please choose train and press start'),'ERROR','ERROR');
+% end
 
-if StartStatus == 1
-    if Lamp2Status == 1 
-        set(handles.Lamp2Button,'string',' Lamp2 ON','enable','on','BackgroundColor','green');
-    elseif Lamp2Status == 0 
-        set(handles.Lamp2Button,'string','Lamp2 OFF','enable','on','BackgroundColor',[0.94 0.94 0.94]);
-    end
-else
-    msgbox(sprintf('Please choose train and press start'),'ERROR','ERROR');
-end
+% % --- Executes on button press in Lamp3Button.
+% function Lamp3Button_Callback(hObject, eventdata, handles)
+% % hObject    handle to Lamp3Button (see GCBO)
+% % eventdata  reserved - to be defined in a future version of MATLAB
+% % handles    structure with handles and user data (see GUIDATA)
+% 
+% global StartStatus;
+% Lamp3Status = get(hObject,'Value'); 
+% 
+% if StartStatus == 1
+%     if Lamp3Status == 1 
+%         set(handles.Lamp3Button,'string',' Lamp3 ON','enable','on','BackgroundColor','green');
+%     elseif Lamp3Status == 0 
+%         set(handles.Lamp3Button,'string','Lamp3 OFF','enable','on','BackgroundColor',[0.94 0.94 0.94]);
+%     end
+% else
+%     msgbox(sprintf('Please choose train and press start'),'ERROR','ERROR');
+% end
 
-% --- Executes on button press in Air2Button.
-function Air2Button_Callback(hObject, eventdata, handles)
-% hObject    handle to Air2Button (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-% Hint: get(hObject,'Value') returns toggle state of Air2Button
-global StartStatus;
-Air2Status = get(hObject,'Value'); 
-
-if StartStatus == 1
-    if Air2Status == 1 
-        set(handles.Air2Button,'string',' Air2 ON','enable','on','BackgroundColor','green');
-    elseif Air2Status == 0 
-        set(handles.Air2Button,'string','Air2 OFF','enable','on','BackgroundColor',[0.94 0.94 0.94]);
-    end
-else
-    msgbox(sprintf('Please choose train and press start'),'ERROR','ERROR');
-end
-
-% --- Executes on button press in PassengerDoorButton.
-function PassengerDoorButton_Callback(hObject, eventdata, handles)
-% hObject    handle to PassengerDoorButton (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-global StartStatus;
-Door2Status = get(hObject,'Value'); 
-
-if StartStatus == 1
-    if Door2Status == 1 
-        set(handles.PassengerDoorButton,'string','Door ON','enable','on','BackgroundColor','green');
-        set(handles.PassengerDoorText,'string','Passenger','enable','on','BackgroundColor','green');
-    elseif Door2Status == 0 
-        set(handles.PassengerDoorButton,'string','Door OFF','enable','on','BackgroundColor',[0.94 0.94 0.94]);
-        set(handles.PassengerDoorText,'string','Passenger','enable','on','BackgroundColor',[0.94 0.94 0.94]);
-    end
-else
-    msgbox(sprintf('Please choose train and press start'),'ERROR','ERROR');
-end
-
-% --- Executes on button press in Lamp3Button.
-function Lamp3Button_Callback(hObject, eventdata, handles)
-% hObject    handle to Lamp3Button (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-global StartStatus;
-Lamp3Status = get(hObject,'Value'); 
-
-if StartStatus == 1
-    if Lamp3Status == 1 
-        set(handles.Lamp3Button,'string',' Lamp3 ON','enable','on','BackgroundColor','green');
-    elseif Lamp3Status == 0 
-        set(handles.Lamp3Button,'string','Lamp3 OFF','enable','on','BackgroundColor',[0.94 0.94 0.94]);
-    end
-else
-    msgbox(sprintf('Please choose train and press start'),'ERROR','ERROR');
-end
-
-% --- Executes on button press in Air3Button.
-function Air3Button_Callback(hObject, eventdata, handles)
-% hObject    handle to Air3Button (see GCBO)
-% eventdata  reserved - to be defined in a future version of MATLAB
-% handles    structure with handles and user data (see GUIDATA)
-
-global StartStatus;
-Air3Status = get(hObject,'Value'); 
-
-if StartStatus == 1
-    if Air3Status == 1 
-        set(handles.Air3Button,'string',' Air3 ON','enable','on','BackgroundColor','green');
-    elseif Air3Status == 0 
-        set(handles.Air3Button,'string','Air3 OFF','enable','on','BackgroundColor',[0.94 0.94 0.94]);
-    end
-else
-    msgbox(sprintf('Please choose train and press start'),'ERROR','ERROR');
-end
-
+% % --- Executes on button press in Air3Button.
+% function Air3Button_Callback(hObject, eventdata, handles)
+% % hObject    handle to Air3Button (see GCBO)
+% % eventdata  reserved - to be defined in a future version of MATLAB
+% % handles    structure with handles and user data (see GUIDATA)
+% 
+% global StartStatus;
+% Air3Status = get(hObject,'Value'); 
+% 
+% if StartStatus == 1
+%     if Air3Status == 1 
+%         set(handles.Air3Button,'string',' Air3 ON','enable','on','BackgroundColor','green');
+%     elseif Air3Status == 0 
+%         set(handles.Air3Button,'string','Air3 OFF','enable','on','BackgroundColor',[0.94 0.94 0.94]);
+%     end
+% else
+%     msgbox(sprintf('Please choose train and press start'),'ERROR','ERROR');
+% end
+% 
 % % --- Executes on button press in Door3Button.
 % function Door3Button_Callback(hObject, eventdata, handles)
 % % hObject    handle to Door3Button (see GCBO)
