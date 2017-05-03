@@ -95,6 +95,10 @@ set(handles.TrafficLight4,'BackgroundColor','red');
 
 global StartStatus;
 StartStatus = 0;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+        global ip;                        %%
+        ip = '192.168.137.90';            %%                          %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % select train
 dropdownTxt = {'Select Train','Narita Line','Yamanote Line'};

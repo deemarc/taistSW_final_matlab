@@ -9,9 +9,6 @@ global x0;
 global tspan;
 global t;
 global uval
-ip = '192.168.137.90';
-handles.NextStation.String = getDestination(ip,handles.TrainSelect.Value);
-%handles.RemainBlocks.String = num2str(getRemainBlocks(handles.TrainSelect.Value));
 
 
 set(handles.Track1,'BackgroundColor','green');

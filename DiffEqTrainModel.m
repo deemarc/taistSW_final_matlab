@@ -9,7 +9,10 @@ global tspan;
 global t;
 global Totaltime;
 global distance;
+global ip;
 
+handles.NextStation.String = getDestination(ip,handles.TrainSelect.Value);
+%handles.RemainBlocks.String = num2str(getRemainBlocks(handles.TrainSelect.Value));
 
 %% Loop
 if time <= length(u)
@@ -54,8 +57,7 @@ timex=0:    (Totaltime)/(length(x_val)-1):    Totaltime;     % in s
 %optional
 % distance = mean(v_val)*time ;                    % in m
 distance = v0;                            %m in 1s
- 
-
+updateDistance(ip,handles.TrainSelect.Value,round(distance));
     %Display value in GUI handles
     set(handles.AccelerationVal,'string',num2str(u(time)/10000));
     set(handles.VelocityVal,'string',num2str(v0*3.6));

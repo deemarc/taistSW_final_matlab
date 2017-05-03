@@ -18,7 +18,7 @@ disp(sprintf('=> distance in 1 sec : %d m',round(distance)));
 disp(sprintf('=> Acceleration level : %d || velocity = %d km/hr ',u(time)/10000,round(v0*3.6)));
 
     set(handles.RemainBlocks,'string',num2str(length(u) - time));    
-    set(handles.NextStation,'string','Harajuku Station');
+    %set(handles.NextStation,'string','Harajuku Station');
     
     if time == 3*length(u)/4 -10
         set(handles.TrafficLight1,'BackgroundColor','black');
